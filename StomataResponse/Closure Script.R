@@ -1,6 +1,6 @@
 setwd("~/Desktop/Curve Inputs")
 
-source("R function MB.R")
+source("R function.R")
 dd = read.csv("Closure Input.csv",header=TRUE)
 
 dd$to_split = paste(dd$species, dd$data.type)
