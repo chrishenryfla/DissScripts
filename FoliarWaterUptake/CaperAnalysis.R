@@ -6,13 +6,6 @@ library(geiger)
 library(phytools)
 library(phylolm)
 
-# Read in the tree- read.newick was a script that dealt with phylocom files more easily
-# but I don't know whether it's deprecated or suitable for your tree format or not. 
-# I recommend using whatever command ape uses to read in trees instead.
-#source("read.newick.R")
-#tree<-read.newick(file="gsmetanalysis_allspecies_1415_ages.new")
-#tree<-collapse.singles(tree)
-#tree -> allspeciestree
 
 # Read in the data
 read.csv("pgls_hair.csv")-> gsdata
@@ -98,17 +91,6 @@ for (ii in 1:113){
       summary(modelBR)$aic -> Brownian[(ii-1)*114 +kk-1,6]
       summary(modelBR)$aic+ 2*3*4/(10-3-1) -> Brownian[(ii-1)*114+kk-1,7] # AICc
     }
-  		
-    # corBrownian(1,phy=allspeciestree) -> bm
-    # modelBR <- gls(as.formula(ff), data = gsdata, correlation = bm)
-    # summary(modelBR)$tTable -> fita
-    # names(gsdata)[ii+1] -> Brownian[(ii-1)*30 +kk-1,1]
-    # names(gsdata)[kk+1] -> Brownian[(ii-1)*30 +kk-1,2]
-    # fita[2,1] -> Brownian[(ii-1)*30 +kk-1,3]
-    # fita[2,2] -> Brownian[(ii-1)*30 +kk-1,4]
-    # fita[2,4] -> Brownian[(ii-1)*30 +kk-1,5]
-    # summary(modelBR)$AIC -> Brownian[(ii-1)*30 +kk-1,6]
-    # summary(modelBR)$AIC  + 2*3*4/(10-3-1) -> Brownian[(ii-1)*30 +kk-1,7] # AICc
     
     # Pagel
     try(phylolm(as.formula(ff), data = gsdata, phy = allspeciestree, model = "lambda")) -> modelPL
@@ -132,20 +114,9 @@ for (ii in 1:113){
       modelPL$optpar-> Pagel[(ii-1)*114 +kk-1,7]
       summary(modelPL)$aic+ 2*3*4/(10-3-1) -> Pagel[(ii-1)*114 +kk-1,8] # AICc
     } # maybe it has one more parameter because it fits lambda?
-  
-    # modelPL <- gls(as.formula(ff), data = gsdata, correlation = corPagel(1,allspeciestree))
-    # summary(modelPL)$tTable -> fita
-    # names(gsdata)[ii+1] -> Pagel[(ii-1)*30 +kk-1,1]
-    # names(gsdata)[kk+1] -> Pagel[(ii-1)*30 +kk-1,2]
-    # fita[2,1] -> Pagel[(ii-1)*30 +kk-1,3]
-    # fita[2,2] -> Pagel[(ii-1)*30 +kk-1,4]
-    # fita[2,4] -> Pagel[(ii-1)*30 +kk-1,5]
-    # summary(modelPL)$AIC -> Pagel[(ii-1)*30 +kk-1,6]
-    # attr(modelPL$apVar,"Pars")["corStruct"]-> Pagel[(ii-1)*30 +kk-1,7]
-    # summary(modelPL)$AIC  + 2*3*4/(10-3-1) -> Pagel[(ii-1)*30 +kk-1,8] # AICc
+
     
     OU
-    #corMartins(1,phy=allspeciestree) -> ou
     
     try(phylolm(as.formula(ff), data = gsdata, phy = allspeciestree, model = "OUfixedRoot")) -> modelOU
     
