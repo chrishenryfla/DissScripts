@@ -15,37 +15,6 @@ plot(tree1$scenario.3)
 write.tree(tree1$scenario.3, "sample.tre")
 }
 
-#Now do it for each family
-{
-#get file names for each family
-fam_files<-list.files(pattern="*.csv")
-
-#make function to read in each csv file
-load_file1 <- function(file_name) {
-  csv_file <- suppressWarnings(read.csv(file_name, header = TRUE))
-  
-  csv_file
-  }
-
-#use lappply to read each csv file into its own matrix
-family4phylo <- lapply(X = fam_files, FUN = load_file1)
-
-#create a function to create each family phylogeny
-funk <- function(familyfile){
-  tree1 <- phylo.maker(sp.list = familyfile, 
-                       tree = GBOTB.extended.TPL, 
-                       nodes = nodes.info.1.TPL, 
-                       scenarios = "S3")
-}
-
-#prepare for loop for tree creation
-result <- vector()
-for (i in 1:length(fam_files)){
-  e_x<-family4phylo[[i]]
-  result[i]<-funk(e_x)
-}
-
-}
 
 #Fix polytomies
 {
@@ -66,30 +35,3 @@ for (i in 1:length(fam_files)){
     plot(obj,outline=FALSE)
   }
 
-#Plot trait evolution on all of the trees in the directory
-{
-  #obtain all csv trait files containing using load_file, but account for rownames
-    fam_data<-list.files(pattern="*data.csv")
-    load_file2 <- function(file_name) {
-      csv_file <- suppressWarnings(read.csv(file_name, row.names = 1))
-      
-      csv_file
-    }
-    family4data <- lapply(X = fam_data, FUN = load_file2)
-
-  #read in all your tree files but alter the .csv function for .tre
-    fam_trees<-list.files(pattern="*.tre")
-    load_tree <- function(file_name) {
-    tre_file <- (read.newick(file_name))
-  
-    tre_file
-    }
-    family4trees <- lapply(X = fam_trees, FUN = load_tree)
-  #make a function to loop trait evolution plotting
-    trait_tree<-vector()
-    for (i in 1:length(fam_trees)){
-            sp_range[i]<-as.factor(setNames(family4data[[i]]$area,
-                                         rownames(family4data[[i]])))
-            trait_tree[i]<-contMap(family4trees[[i]],sp_range[i],plot=FALSE)
-            }
-}
